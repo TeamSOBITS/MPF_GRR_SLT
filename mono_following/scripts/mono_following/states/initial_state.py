@@ -5,9 +5,9 @@ class InitialState(State):
         pass
     
     def state_name(self):
-        return "initialization"
+        return "initial"
     
-    def update(self, descriminator, tracks):
+    def update(self, descriminator, tracks, target_position, target_InitialClassifier_count):
         target_id = self.select_target(tracks)
         if target_id < 0:
             return self

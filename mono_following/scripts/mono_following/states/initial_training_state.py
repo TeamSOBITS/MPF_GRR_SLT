@@ -12,13 +12,29 @@ class InitialTrainingState(State):
         return self.target_id
 
     def state_name(self):
-        return "initial training"
+        return "initial_training"
     
-    def update(self, descriminator: Descriminator, tracks: dict):
-        print("Initial training")
-        from states.initial_state import InitialState
-        if self.target_id not in tracks.keys():
-            return InitialState()
+    def update(self, descriminator: Descriminator, tracks: dict, target_position: tuple, target_InitialClassifier_count: list):
+        rospy.loginfo("Initial training state")
+
+        target_id = -1
+        distance = 0.0
+
+        for id in tracks.keys():
+            pos = tracks[id].pos_in_baselink  # [x,y]
+            current_dis = tracks[id].distance
+            if (len(tracks.keys())!=1 and abs(pos[1])>0.2):
+                continue
+            if(target_id==-1 or distance > current_dis):
+                target_id = id
+                distance = current_dis
+        
+        if target_id < 0:
+            return self
+        
+        # target_id を self.target_id に代入
+        self.target_id = target_id
+
         isSuccessed = descriminator.updateFeatures(tracks, self.target_id)
         if isSuccessed:
             self.num_pos_samples += 1

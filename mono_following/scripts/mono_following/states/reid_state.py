@@ -12,7 +12,9 @@ class ReidState(State):
     def state_name(self):
         return "re-identification"
     
-    def update(self, descriminator: Descriminator, tracks):
+    def update(self, descriminator: Descriminator, tracks, target_position: tuple, target_InitialClassifier_count: list):
+        rospy.loginfo("re-identification state")
+
         descriminator.predict(tracks)  # return a dict
         for idx in tracks.keys():
             if tracks[idx].target_confidence ==None:

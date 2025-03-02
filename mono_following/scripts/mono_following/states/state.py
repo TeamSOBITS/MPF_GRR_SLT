@@ -12,5 +12,5 @@ class State(ABC):
         pass
 
     @abstractmethod
-    def update(self, descriminator, tracks):
+    def update(self, descriminator, tracks, target_position, target_InitialClassifier_count):
         pass

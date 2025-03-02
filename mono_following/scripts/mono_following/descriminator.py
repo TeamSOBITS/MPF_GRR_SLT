@@ -4,6 +4,7 @@ import rospy
 # from tracklet import Tracklet
 from reid.RRClassifier import RRClassifierWithStrategy
 from reid.descriptor.deep.feature_extractor import PersonExtractor
+
 """
 Thread 1:
 1. Store features
@@ -14,7 +15,12 @@ Thread 2:
 class Descriminator:
     def __init__(self):
         # Initialize the feature extraction
-        self.extractor = PersonExtractor(model_path=os.path.join("reid/descriptor/deep/checkpoint/ckpt.t7"))
+        # model_path = os.path.abspath(os.path.join("reid/descriptor/deep/checkpoint/ckpt.t7"))
+
+        # model_path = "/home/sobits/catkin_ws/src/MPF_GRR_SLT/mono_following/scripts/mono_following/reid/descriptor/deep/checkpoint/ckpt.t7"
+        # self.extractor = PersonExtractor(model_path=model_path)
+
+        self.extractor = PersonExtractor()
 
         # Initialize our target classifier
         alpha = 1.0
@@ -63,6 +69,9 @@ class Descriminator:
             if tracks[idx].image_patch is None:
                 continue
             tracks[idx].target_confidence = self.classifier.predict(tracks[idx].descriptor)
+
+            # 各人物のidとconfidenceを出力
+            rospy.loginfo(f"ID: {idx}, Confidence: {tracks[idx].target_confidence}")
 
     def filterFeatures(self):
         pass
